@@ -1,0 +1,30 @@
+{
+  "name": "acetate-asset-revisions",
+  "description": "Use versioned assets with Acetate for cache-busting.",
+  "version": "0.1.0",
+  "author": "Patrick Arlt <patrick.arlt@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/patrickarlt/acetate-asset-revisions/issues"
+  },
+  "devDependencies": {
+    "semistandard": "*",
+    "tap-spec": "^3.0.0",
+    "tape": "^4.0.0"
+  },
+  "homepage": "https://github.com/patrickarlt/acetate-asset-revisions",
+  "keywords": [
+    "acetate"
+  ],
+  "license": "ISC",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/patrickarlt/acetate-asset-revisions.git"
+  },
+  "scripts": {
+    "test": "semistandard && tape test/*.js | tap-spec"
+  },
+  "dependencies": {
+    "lodash": "^3.7.0"
+  }
+}
