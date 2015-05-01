@@ -60,7 +60,7 @@ YOu can look at how to integrate Acetate and asset versioing into a complete bui
 
 * Grunt - *Coming soon*
 * Gulp - *Coming soon*
-* Command-line/NPM scripts - *Coming soon*
+* [Command-line/NPM scripts](https://github.com/patrickarlt/acetate-cli-sample)
 
 ## Assumptions
 
