@@ -23,20 +23,19 @@ npm install acetate-asset-revisions --save-dev
 var assetRevisions = require('acetate-asset-revisions')
 
 module.exports = function(acetate){
-
   acetate.use(assetRevisions({
     manifest: 'build/assets.json'
   }));
-}
+};
 ```
 
 The `manifest` option should be the path to a JSON file that maps orginal source names to versioned assets. Most build systems have a way to accomplish this including [gulp-rev](https://github.com/sindresorhus/gulp-rev#asset-manifest), [grunt-filerev](https://github.com/yeoman/grunt-filerev#summary) and [hashmark](https://github.com/keithamus/hashmark#shell) for command-line users.
 
-YOu will then have access to serveral helpers to use in your templates:
+You will then have access to serveral helpers to use in your templates:
 
 * `{% css 'path/to/css.css'%}`
 * `{% js 'path/to/js.js'%}`
-* `{% img 'path/to/img.jpg' 'alt text'%}
+* `{% img 'path/to/img.jpg' 'alt text'%}`
 
 ```html
 <!DOCTYPE html>
@@ -68,8 +67,8 @@ This project makes several assumptions about your project structure. Your manife
 
 ```json
 {
-    "css/style.css": "css/style-098f6bcd.css",
-    "js/main.js": "js/main-273c2cin.js"
+  "css/style.css": "css/style-098f6bcd.css",
+  "js/main.js": "js/main-273c2cin.js"
 }
 ```
 
