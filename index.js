@@ -1,48 +1,52 @@
 var fs = require('fs');
-var _ = require('lodash');
 var path = require('path');
+var url = require('url');
+var _ = require('lodash');
 
-module.exports = function (options) {
-  return function (acetate, callback) {
-    fs.readFile(path.join(acetate.root, acetate.dest, options.manifest), function (error, manifest) {
-      var assets = {};
+module.exports = function (manifest, {
+  transformKey = function (key) {return key;},
+  transformValue = function (value) {return value;}
+} = {}) {
+  let assets = {};
 
-      if (!error && manifest) {
-        assets = _.transform(JSON.parse(manifest), function (result, value, key) {
-          key = key.replace(acetate.dest + '/', '');
-          value = value.replace(acetate.dest + '/', '');
-          result[key] = value;
-        }, {});
-      }
+  function getAttributes (attrs) {
+    return _.trim(_.reduce(attrs, function (attributes, value, key) {
+      return attributes += ` ${key}="${value}"`;
+    }, ''));
+  }
 
-      acetate.helper('css', function (context, src) {
-        var template = '<link href="{{ relativePath }}{{ src }}" rel="stylesheet" type="text/css" />';
+  function getUrl (context, src) {
+    return url.resolve(context.page.relativePath, assets[src] || src);
+  }
 
-        return acetate.nunjucks.renderString(template, {
-          src: assets[src] || src,
-          relativePath: context.relativePath
-        });
+  return function (acetate) {
+    acetate.transformAllAsync(function (pages, callback) {
+      fs.readFile(path.join(acetate.root, manifest), 'utf8', function (error, manifest) {
+        if (manifest) {
+          assets = _.transform(JSON.parse(manifest), function (result, value, key) {
+            key = transformKey(key);
+            value = transformValue(value);
+            result[key] = value;
+          }, {});
+        }
+
+        callback(null, pages);
       });
+    });
 
-      acetate.helper('js', function (context, src) {
-        var template = '<script src="{{ relativePath }}{{ src }}" type="application/javascript"></script>';
+    acetate.helper('css', function (context, href) {
+      return `<link href="${getUrl(context, href)}"${getAttributes(context.options)}/>`;
+    }, {
+      rel: 'stylesheet',
+      type: 'text/css'
+    });
 
-        return acetate.nunjucks.renderString(template, {
-          src: assets[src] || src,
-          relativePath: context.relativePath
-        });
-      });
+    acetate.helper('js', function (context, src) {
+      return `<script src="${getUrl(context, src)}"${getAttributes(context.options)}></script>`;
+    });
 
-      acetate.helper('img', function (context, src, alt) {
-        var template = '<img src="{{ relativePath }}{{ src }}" alt="{{ alt }}"/>';
-
-        return acetate.nunjucks.renderString(template, {
-          src: assets[src] || src,
-          relativePath: context.relativePath
-        });
-      });
-
-      callback(undefined, acetate);
+    acetate.helper('img', function (context, src) {
+      return `<img src="${getUrl(context, src)}"${getAttributes(context.options)}/>`;
     });
   };
 };
