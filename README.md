@@ -53,6 +53,11 @@ You will then have access to serveral helpers to use in your templates:
 </html>
 ```
 
+You can pass any additional HTML attributes you want as options.
+
+* `{% css "css/style.css", media="print" %}` - for standard string attributes use a key/value pair
+* `{% js "js/main.js", async=true %}` - for boolean attributes pass `true` as a value
+
 ## Complete Examples
 
 YOu can look at how to integrate Acetate and asset versioing into a complete build system in these samples:

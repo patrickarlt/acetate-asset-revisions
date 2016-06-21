@@ -4,14 +4,22 @@ var url = require('url');
 var _ = require('lodash');
 
 module.exports = function (manifest, {
-  transformKey = function (key) {return key;},
-  transformValue = function (value) {return value;}
+  transformKey = function (key) { return key; },
+  transformValue = function (value) { return value; }
 } = {}) {
   let assets = {};
 
   function getAttributes (attrs) {
     return _.trim(_.reduce(attrs, function (attributes, value, key) {
-      return attributes += ` ${key}="${value}"`;
+      if(!value) {
+        return attributes;
+      }
+
+      if (_.isBoolean(value) && value) {
+        return attributes += ` ${key}`;
+      }
+
+      return attributes += ` ${key}="${(value)}"`;
     }, ''));
   }
 
